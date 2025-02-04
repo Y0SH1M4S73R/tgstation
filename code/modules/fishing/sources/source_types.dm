@@ -1282,12 +1282,13 @@
 		/obj/item/fish/slimefish/bluespace = 5,
 	)
 	fish_source_flags = FISH_SOURCE_FLAG_EXPLOSIVE_NONE
-	wait_time_range = list(1 SECONDS, 2 SECONDS)
 	///Whether the spot this fish source is linked to is connected to a bluespace anomaly, thus we are susceptible to the anomaly's teleportation effects
 	var/is_spot_bluespace_anomaly
 
 /datum/fish_source/bluespace_anomaly/on_fishing_spot_init(datum/component/fishing_spot/spot)
 	is_spot_bluespace_anomaly = istype(spot.parent, /obj/effect/anomaly/bluespace)
+	if(is_spot_bluespace_anomaly)
+		wait_time_range = list(1 SECONDS, 2 SECONDS)
 
 /datum/fish_source/bluespace_anomaly/calculate_difficulty(result, obj/item/fishing_rod/rod, mob/fisherman)
 	if(!is_spot_bluespace_anomaly || HAS_TRAIT(fisherman, TRAIT_NO_TELEPORT))
