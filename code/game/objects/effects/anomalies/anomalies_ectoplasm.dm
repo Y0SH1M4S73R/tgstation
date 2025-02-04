@@ -5,6 +5,7 @@
 	anomaly_core = /obj/item/assembly/signaler/anomaly/ectoplasm
 	lifespan = ANOMALY_COUNTDOWN_TIMER + 2 SECONDS //This one takes slightly longer, because it can run away.
 	move_chance = 0 //prevents it from moving around so ghosts can actually move it with decent accuracy
+	fish_source_type = /datum/fish_source/ectoplasmic_anomaly
 
 	///Blocks the anomaly from updating ghost count. Used in case an admin wants to rig the anomaly to be a certain size or intensity.
 	var/override_ghosts = FALSE

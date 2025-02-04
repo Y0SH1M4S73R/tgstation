@@ -5,6 +5,7 @@
 	anomaly_core = /obj/item/assembly/signaler/anomaly/dimensional
 	lifespan = ANOMALY_COUNTDOWN_TIMER * 20 // will generally be killed off by reaching max teleports first
 	move_chance = 0
+	fish_source_type = /datum/fish_source/dimensional_anomaly
 	/// Range of effect, if left alone anomaly will convert a 2(range)+1 squared area.
 	var/range = 3
 	/// List of turfs this anomaly will try to transform before relocating

@@ -133,6 +133,13 @@
 		log_bomber(user, "rigged to blow", src, "(emagging)")
 	return TRUE
 
+/obj/item/card/emagfake/doorjack
+	name = /obj/item/card/emag/doorjack::name
+	desc = /obj/item/card/emag/doorjack::desc + " Closer inspection shows that this card is a poorly made replica, with a \"Donk Co.\" logo stamped on the back."
+	icon = /obj/item/card/emag/doorjack::icon
+	icon_state = /obj/item/card/emag/doorjack::icon_state
+	worn_icon_state = /obj/item/card/emag/doorjack::worn_icon_state
+
 /obj/item/card/emag/Initialize(mapload)
 	. = ..()
 	type_blacklist = list(typesof(/obj/machinery/door/airlock) + typesof(/obj/machinery/door/window/) +  typesof(/obj/machinery/door/firedoor) - typesof(/obj/machinery/door/airlock/tram)) //list of all typepaths that require a specialized emag to hack.

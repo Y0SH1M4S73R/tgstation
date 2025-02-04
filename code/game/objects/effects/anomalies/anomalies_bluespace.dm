@@ -5,6 +5,7 @@
 	icon_state = "bluespace"
 	density = TRUE
 	anomaly_core = /obj/item/assembly/signaler/anomaly/bluespace
+	fish_source_type = /datum/fish_source/bluespace_anomaly
 	///range from which we can teleport someone
 	var/teleport_range = 1
 	///Distance we can teleport someone passively
@@ -96,6 +97,7 @@
 	teleport_range = 2
 	teleport_distance = 12
 	anomaly_core = null
+	fish_source_type = /datum/fish_source/bluespace_anomaly/big
 
 /obj/effect/anomaly/bluespace/big/Initialize(mapload, new_lifespan)
 	. = ..()

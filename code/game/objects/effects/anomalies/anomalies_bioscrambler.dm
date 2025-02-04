@@ -6,6 +6,7 @@
 	pass_flags = PASSTABLE | PASSGLASS | PASSGRILLE | PASSCLOSEDTURF | PASSMACHINE | PASSSTRUCTURE | PASSDOORS
 	layer = ABOVE_MOB_LAYER
 	lifespan = ANOMALY_COUNTDOWN_TIMER * 2
+	fish_source_type = /datum/fish_source/bioscrambler_anomaly
 
 	/// Who are we moving towards?
 	var/datum/weakref/pursuit_target

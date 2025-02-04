@@ -193,6 +193,10 @@
 	name = "C-4 sticker"
 	icon_state = "c4"
 
+/obj/item/sticker/syndicate/x4
+	name = "X-4 sticker"
+	icon_state = "x4"
+
 /obj/item/sticker/syndicate/bomb
 	name = "syndicate bomb sticker"
 	icon_state = "sbomb"

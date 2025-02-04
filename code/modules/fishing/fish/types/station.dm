@@ -70,41 +70,6 @@
 	random_case_rarity = FISH_RARITY_NOPE
 	fish_traits = list(/datum/fish_trait/parthenogenesis)
 
-/obj/item/fish/slimefish
-	name = "aquatic slime"
-	fish_id = "slimefish"
-	desc = "Kids, this is what happens when a slime overcomes its hydrophobic nature. It goes glug glug."
-	icon_state = "slimefish"
-	icon_state_dead = "slimefish_dead"
-	sprite_width = 7
-	sprite_height = 7
-	fish_flags = parent_type::fish_flags & ~FISH_DO_FLOP_ANIM //it already has a cute bouncy wiggle. :3
-	random_case_rarity = FISH_RARITY_VERY_RARE
-	required_fluid_type = AQUARIUM_FLUID_ANADROMOUS
-	stable_population = 4
-	health = 150
-	fillet_type = /obj/item/slime_extract/grey
-	fish_traits = list(/datum/fish_trait/toxin_immunity, /datum/fish_trait/crossbreeder)
-	favorite_bait = list(
-		list(
-			FISH_BAIT_TYPE = FISH_BAIT_FOODTYPE,
-			FISH_BAIT_VALUE = TOXIC,
-		),
-		list(
-			FISH_BAIT_TYPE = FISH_BAIT_REAGENT,
-			FISH_BAIT_VALUE = /datum/reagent/toxin,
-			FISH_BAIT_AMOUNT = 5,
-		),
-	)
-	required_temperature_min = MIN_AQUARIUM_TEMP+20
-	beauty = FISH_BEAUTY_GREAT
-
-/obj/item/fish/slimefish/get_food_types()
-	return SEAFOOD|TOXIC
-
-/obj/item/fish/slimefish/get_base_edible_reagents_to_add()
-	return list(/datum/reagent/toxin/slimejelly = 5)
-
 /obj/item/fish/fryish
 	name = "fryish"
 	fish_id = "fryish"

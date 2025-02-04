@@ -155,3 +155,27 @@
 	righthand_file = 'icons/mob/inhands/equipment/security_righthand.dmi'
 	rots_per_mag = 2
 	shrapnel_type = /obj/projectile/bullet/pellet/stingball
+
+/obj/item/grenade/blinkpop
+	name = "blinkpop"
+	desc = "A cheap plastic replica of a flashbang."
+	icon_state = "flashbang"
+	inhand_icon_state = "flashbang"
+	lefthand_file = 'icons/mob/inhands/equipment/security_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/equipment/security_righthand.dmi'
+	light_range = 6
+	light_power = 2
+	light_on = FALSE
+
+/obj/item/grenade/blinkpop/detonate(mob/living/lanced_by)
+	. = ..()
+	if(!.)
+		return
+	set_light_on(TRUE)
+	addtimer(CALLBACK(src, PROC_REF(blink_end)), FLASH_LIGHT_DURATION, TIMER_OVERRIDE|TIMER_UNIQUE)
+	playsound(src, 'sound/effects/snap.ogg', 50, TRUE)
+
+/obj/item/grenade/blinkpop/proc/blink_end()
+	set_light_on(FALSE)
+	dud_flags &= ~GRENADE_USED
+	active = FALSE

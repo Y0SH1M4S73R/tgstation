@@ -1098,3 +1098,314 @@
 	human_user?.do_jitter_animation(50)
 	// Hand fires at them from the location
 	fire_curse_hand(user, get_turf(challenge.location))
+
+/datum/fish_source/pyro_anomaly
+	background = "background_lava"
+	catalog_description = null
+	radial_state = "pyroclastic"
+	overlay_state = "portal_lava"
+	duds = list("it was nothing", "the hook is empty", "just ashes")
+	fish_table = list(
+		FISHING_DUD = 5,
+		/obj/item/fish/slimefish/red = 10,
+		/obj/item/fish/slimefish/orange = 10,
+	)
+	fish_source_flags = FISH_SOURCE_FLAG_EXPLOSIVE_NONE
+
+/datum/fish_source/flux_anomaly
+	background = "background_antique"
+	catalog_description = null
+	radial_state = "flux"
+	overlay_state = "portal_mansus"
+	duds = list("it was nothing", "the hook is empty", "does an electric charge count?")
+	fish_table = list(
+		FISHING_DUD = 5,
+		FISHING_ZAP = 5,
+		/obj/item/spellpacket/lightningbolt = 10,
+		/obj/item/slime_extract/yellow = 10,
+	)
+
+	var/list/explosion_fish_table = list(
+		FISHING_ZAP = 10,
+	)
+
+/datum/fish_source/flux_anomaly/get_fish_table(atom/location, from_explosion)
+	if(from_explosion)
+		return explosion_fish_table
+	return ..()
+
+/datum/fish_source/flux_anomaly/spawn_reward(reward_path, atom/spawn_location, atom/fishing_spot)
+	if(reward_path == FISHING_ZAP)
+		tesla_zap(source = get_turf(fishing_spot), power = 0.5 MEGA JOULES, zap_flags = ZAP_GENERATES_POWER | ZAP_MOB_STUN)
+		return
+	. = ..()
+
+/datum/fish_source/bioscrambler_anomaly
+	background = "background_chasm"
+	catalog_description = null
+	radial_state = "bioscrambler"
+	overlay_state = "portal_mansus"
+	duds = list("it was nothing", "the hook is empty", "it got scrambled into goo")
+	catalog_description = null
+	fish_source_flags = FISH_SOURCE_FLAG_EXPLOSIVE_NONE
+
+/datum/fish_source/bioscrambler_anomaly/on_fishing_spot_init(datum/component/fishing_spot/spot)
+	if(!length(GLOB.bioscrambler_fish_table))
+		init_bioscrambler_fish_table()
+	fish_table = GLOB.bioscrambler_fish_table
+
+/proc/init_bioscrambler_fish_table()
+	var/list/body_parts = typesof(/obj/item/bodypart/chest) + typesof(/obj/item/bodypart/head) + subtypesof(/obj/item/bodypart/arm) + subtypesof(/obj/item/bodypart/leg)
+	for(var/obj/item/bodypart/part as anything in body_parts)
+		if(!is_type_in_typecache(part, GLOB.bioscrambler_fishing_blacklist) && BODYTYPE_CAN_BE_BIOSCRAMBLED(initial(part.bodytype)))
+			continue
+		body_parts -= part
+
+	var/list/organs = subtypesof(/obj/item/organ) + subtypesof(/obj/item/organ)
+	for(var/obj/item/organ/organ_type as anything in organs)
+		if(!is_type_in_typecache(organ_type, GLOB.bioscrambler_fishing_blacklist) && !(initial(organ_type.organ_flags) & ORGAN_ROBOTIC))
+			continue
+		organs -= organ_type
+
+	for(var/path in body_parts + organs)
+		GLOB.bioscrambler_fish_table[path] = is_path_in_list(path, GLOB.bioscrambler_fishing_unique_weights, TRUE) || FISH_RARITY_BASIC
+
+/datum/fish_source/ectoplasmic_anomaly
+	background = "background_camo"
+	catalog_description = null
+	radial_state = "ectoplasm"
+	overlay_state = "portal_mansus"
+	duds = list("it was nothing", "the hook is empty", "it was nothing... or was it?", "the hook is empty... or is it?", "it was a ghoooooost~")
+	fish_table = list(
+		FISHING_DUD = 10,
+		FISHING_ORBITER = 5,
+		/obj/item/ectoplasm = 20,
+		/obj/item/stack/sheet/hauntium = 15,
+		/mob/living/basic/ghost = 10,
+	)
+	fish_source_flags = FISH_SOURCE_FLAG_EXPLOSIVE_NONE
+	var/ghost_key
+
+/datum/fish_source/ectoplasmic_anomaly/pre_challenge_started(obj/item/fishing_rod/rod, mob/user, datum/fishing_challenge/challenge)
+	. = ..()
+	if(challenge.reward_path != FISHING_ORBITER)
+		return
+	var/atom/fishing_spot = challenge.location
+	var/list/orbiters = fishing_spot.get_all_orbiters()
+	if(length(orbiters))
+		INVOKE_ASYNC(src, PROC_REF(poll_ghosts), challenge, orbiters)
+
+/datum/fish_source/ectoplasmic_anomaly/proc/poll_ghosts(datum/fishing_challenge/challenge, list/orbiters)
+	var/atom/movable/fishing_spot = challenge.location
+	var/mob/dead/observer/ghost = SSpolling.poll_candidates(
+		question = "Do you want to be the ghost that will be fished out of [fishing_spot]?",
+		group = orbiters,
+		poll_time = 10 SECONDS,
+		alert_pic = /mob/dead/observer,
+		role_name_text = "fished up ghost",
+		chat_text_border_icon = /mob/dead/observer,
+		amount_to_pick = 1,
+	)
+	if(QDELETED(challenge))
+		return
+	if(ghost)
+		to_chat(ghost, span_boldnotice("<i>You have been selected as the ghost that will be fished out of [fishing_spot]. \
+		You will be spawned if the fishing challenge is beaten, but only if you are still dead or a ghost when it is.</i>"))
+		ghost_key = ghost.ckey
+		return
+	challenge.reward_path = /mob/living/basic/ghost
+
+/datum/fish_source/ectoplasmic_anomaly/on_challenge_completed(mob/user, datum/fishing_challenge/challenge, success)
+	. = ..()
+	ghost_key = null
+
+/datum/fish_source/ectoplasmic_anomaly/spawn_reward(reward_path, atom/spawn_location, atom/fishing_spot)
+	if(reward_path == FISHING_ORBITER)
+		if(ghost_key)
+			var/mob/who = get_mob_by_ckey(ghost_key)
+			var/mob/dead/observer/ghost
+			if(istype(who, /mob/dead/observer))
+				ghost = who
+			else if(istype(who, /mob/living) && who.stat == DEAD)
+				ghost = who.ghostize()
+			if(ghost)
+				var/mob/living/basic/ghost/fished_out/new_ghost = new(spawn_location)
+				var/datum/mind/mind = ghost.mind
+				if(mind)
+					new_ghost.name = "ghost of [mind.name]"
+					new_ghost.AddComponent(/datum/component/temporary_body, mind, mind.current, TRUE)
+				else
+					new_ghost.random_identity = TRUE
+					new_ghost.give_identity()
+				new_ghost.ckey = ghost.ckey
+				if(mind)
+					to_chat(new_ghost, span_boldnotice("You have not forgotten your past life, and retain your previous loyalties. However, \
+					if you are brought back to life, you will not remember anything that happened during your time as a tangible ghost!"))
+				return new_ghost
+		return new /mob/living/basic/ghost(spawn_location)
+	. = ..()
+
+/datum/fish_source/dimensional_anomaly
+	background = "background_camo"
+	catalog_description = null
+	radial_state = "dimensional"
+	overlay_state = "portal_randomizer"
+	fish_source_flags = FISH_SOURCE_FLAG_EXPLOSIVE_NONE
+	fish_table = /datum/dimension_theme::fish_table
+
+/datum/fish_source/dimensional_anomaly/get_fish_table(atom/location, from_explosion)
+	. = ..()
+	var/obj/effect/anomaly/dimensional/anomaly
+	if(istype(location, /obj/effect/anomaly/dimensional))
+		anomaly = location
+	else if(istype(location, /obj/machinery/fishing_portal_generator))
+		var/obj/machinery/fishing_portal_generator/generator = location
+		if(istype(generator.current_linked_atom, /obj/effect/anomaly/dimensional))
+			anomaly = generator.current_linked_atom
+	if(anomaly)
+		return anomaly.theme.fish_table
+
+/datum/fish_source/bluespace_anomaly
+	catalog_description = null
+	radial_state = "bluespace"
+	overlay_state = "portal_hyperspace"
+	duds = list("it was nothing", "the hook is empty", "it got teleported")
+	fish_table = list(
+		FISHING_DUD = 5,
+		FISHING_TELEPORT = 20,
+		/obj/item/fish/starfish = 5,
+		/obj/item/fish/baby_carp = 5,
+		/obj/item/stack/ore/bluespace_crystal = 5,
+		/obj/item/fish/slimefish/bluespace = 5,
+	)
+	fish_source_flags = FISH_SOURCE_FLAG_EXPLOSIVE_NONE
+	wait_time_range = list(1 SECONDS, 2 SECONDS)
+	///Whether the spot this fish source is linked to is connected to a bluespace anomaly, thus we are susceptible to the anomaly's teleportation effects
+	var/is_spot_bluespace_anomaly
+
+/datum/fish_source/bluespace_anomaly/on_fishing_spot_init(datum/component/fishing_spot/spot)
+	is_spot_bluespace_anomaly = istype(spot.parent, /obj/effect/anomaly/bluespace)
+
+/datum/fish_source/bluespace_anomaly/calculate_difficulty(result, obj/item/fishing_rod/rod, mob/fisherman)
+	if(!is_spot_bluespace_anomaly || HAS_TRAIT(fisherman, TRAIT_NO_TELEPORT))
+		return ..()
+	/*
+	 * If you don't have the trait, you can get teleported in the middle of the challenge.
+	 * If you have a teleport blocker implant, the anomaly will paralyze you instead.
+	 * Either way, this would interrupt the challenge.
+	 */
+	return -INFINITY
+
+/datum/fish_source/bluespace_anomaly/simple_dispense_reward(reward_path, atom/spawn_location, atom/fishing_spot)
+	if((reward_path == FISHING_TELEPORT) || (reward_path = FISHING_TELEPORT_ANYTHING))
+		var/atom/movable/teleport_target = get_teleport_target(reward_path, fishing_spot)
+		if(isitem(teleport_target))
+			return teleport_target
+		if(isliving(teleport_target))
+			var/mob/living/guy = teleport_target
+			if(do_teleport(guy, spawn_location, channel = TELEPORT_CHANNEL_BLUESPACE))
+				guy.overlay_fullscreen("bluespace_flash", /atom/movable/screen/fullscreen/bluespace_sparkle, 1)
+				addtimer(CALLBACK(guy, TYPE_PROC_REF(/mob/, clear_fullscreen), "bluespace_flash"), 2 SECONDS)
+				return guy
+		return null
+	return ..()
+
+/datum/fish_source/bluespace_anomaly/proc/get_teleport_target(teleport_type, atom/fishing_spot)
+	switch(teleport_type)
+		if(FISHING_TELEPORT)
+			var/atom/teleport_source = fishing_spot
+			if(istype(fishing_spot, /obj/machinery/fishing_portal_generator))
+				var/obj/machinery/fishing_portal_generator/portal = fishing_spot
+				if(istype(portal.current_linked_atom, /obj/effect/anomaly/bluespace))
+					teleport_source = portal.current_linked_atom
+			var/list/can_pull_from = urange(12, teleport_source)
+			var/atom/movable/teleport_target = pick_n_take(can_pull_from)
+			while(length(can_pull_from) && !(istype(teleport_target) && is_type_in_typecache(teleport_target, GLOB.bluespace_fishing_teleport_whitelist)))
+				teleport_target = pick_n_take(can_pull_from)
+			return teleport_target
+		if(FISHING_TELEPORT_ANYTHING)
+			var/atom/movable/teleport_target
+			while(!is_type_in_typecache(teleport_target, GLOB.bluespace_fishing_teleport_whitelist))
+				var/z = pick(SSmapping.levels_by_any_trait(list(ZTRAIT_STATION, ZTRAIT_LAVA_RUINS, ZTRAIT_SPACE_RUINS, ZTRAIT_MINING)))
+				var/datum/space_level/z_level = SSmapping.z_list[z]
+				var/linked = z_level.linkage
+				var/max = linked ? world.maxx-TRANSITIONEDGE : world.maxx
+				var/min = linked ? 1+TRANSITIONEDGE : 1
+				var/turf/pull_from = locate(rand(min, max), rand(min, max), z)
+				teleport_target = pick(pull_from.contents)
+			return teleport_target
+
+/datum/fish_source/bluespace_anomaly/big
+	fish_table = list(
+		FISHING_TELEPORT_ANYTHING = 10,
+	)
+
+/datum/fish_source/hallucination_anomaly
+	background = "background_mansus"
+	catalog_description = null
+	radial_state = "hallucination"
+	overlay_state = "portal_mansus"
+	fish_source_flags = FISH_SOURCE_FLAG_EXPLOSIVE_NONE
+	fish_table = list(
+		FISHING_DUD = 20,
+		FISHING_HALLUCINATION = 45,
+		/obj/effect/anomaly/hallucination/decoy = 5,
+		/obj/item/sticker/syndicate/c4 = 5,
+		/obj/item/sticker/syndicate/x4 = 5,
+		/obj/item/toy/gun = 5,
+		/obj/item/toy/sword = 5,
+		/obj/item/toy/baton = 5,
+		/obj/item/grenade/blinkpop = 5,
+		/obj/item/card/emagfake = 5,
+		/obj/item/card/emagfake/doorjack = 5,
+		/obj/effect/anomaly/hallucination = 1, //hehe
+	)
+
+	var/static/list/renames = list(
+		/obj/item/sticker/syndicate/c4 = /obj/item/grenade/c4::name,
+		/obj/item/sticker/syndicate/x4 = /obj/item/grenade/c4/x4::name,
+		/obj/item/toy/gun = /obj/item/gun/ballistic/revolver::name,
+		/obj/item/toy/sword = /obj/item/melee/energy/sword/saber::name,
+		/obj/item/toy/baton = /obj/item/melee/baton/security::name,
+		/obj/item/grenade/blinkpop = /obj/item/grenade/flashbang::name,
+	)
+
+/datum/fish_source/hallucination_anomaly/dispense_reward(reward_path, mob/fisherman, atom/fishing_spot, obj/item/fishing_rod/rod)
+	if(reward_path == FISHING_HALLUCINATION)
+		var/hallucination_type = pick(subtypesof(/datum/hallucination/fake_item))
+		var/datum/hallucination/fake_item/hallucination = new hallucination_type(fisherman)
+		hallucination.valid_slots = ITEM_SLOT_HANDS // Ensures the fake item is put in the fisher's hands, as if it were a real fishing reward
+		if(hallucination.start())
+			fisherman.balloon_alert(fisherman, "caught \the [hallucination.template_item_type::name]!")
+			return
+		else
+			qdel(hallucination)
+			reward_path = FISHING_DUD
+	. = ..()
+
+/datum/fish_source/hallucination_anomaly/spawn_reward(reward_path, atom/spawn_location, atom/fishing_spot)
+	. = ..()
+	var/atom/spawned = .
+	if(istype(spawned))
+		var/temp_name = renames[spawned.type]
+		if(temp_name)
+			spawned.name = temp_name
+			addtimer(CALLBACK(src, PROC_REF(revert_reward_name), spawned), 1)
+
+/datum/fish_source/hallucination_anomaly/proc/revert_reward_name(atom/reward)
+	if(QDELETED(reward))
+		return
+	reward.name = initial(reward.name)
+
+/datum/fish_source/hallucination_anomaly/decoy
+	fish_table = list(
+		FISHING_DUD = 5,
+		FISHING_HALLUCINATION = 5,
+		/obj/effect/anomaly/hallucination/decoy = 5,
+	)
+
+/datum/fish_source/hallucination_anomaly/decoy/dispense_reward(reward_path, mob/fisherman, atom/fishing_spot, obj/item/fishing_rod/rod)
+	if(istype(fishing_spot, /obj/effect/anomaly/hallucination/decoy) && !fish_table[reward_path]) //This is a decoy anomaly, no bananium rod fish for you.
+		reward_path = pick_weight(fish_table)
+	. = ..()
+

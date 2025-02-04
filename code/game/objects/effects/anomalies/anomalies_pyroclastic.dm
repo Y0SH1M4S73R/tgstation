@@ -6,6 +6,7 @@
 	/// How many seconds between each gas release
 	var/releasedelay = 10
 	anomaly_core = /obj/item/assembly/signaler/anomaly/pyro
+	fish_source_type = /datum/fish_source/pyro_anomaly
 
 /obj/effect/anomaly/pyro/Initialize(mapload, new_lifespan)
 	. = ..()

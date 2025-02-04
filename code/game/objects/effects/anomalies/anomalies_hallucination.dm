@@ -3,6 +3,7 @@
 	name = "hallucination anomaly"
 	icon_state = "hallucination"
 	anomaly_core = /obj/item/assembly/signaler/anomaly/hallucination
+	fish_source_type = /datum/fish_source/hallucination_anomaly
 	/// Time passed since the last effect, increased by seconds_per_tick of the SSobj
 	var/ticks = 0
 	/// How many seconds between each small hallucination pulses
@@ -56,6 +57,7 @@
 
 /obj/effect/anomaly/hallucination/decoy
 	anomaly_core = null
+	fish_source_type = /datum/fish_source/hallucination_anomaly/decoy
 	///Stores the fake analyzer scan text, so the result is always consistent for each anomaly.
 	var/report_text
 

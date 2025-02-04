@@ -1830,3 +1830,51 @@ GLOBAL_LIST_EMPTY(intento_players)
 	attack_verb_simple = list("smack", "club", "wack", "vendor")
 	w_class = WEIGHT_CLASS_SMALL
 	resistance_flags = FLAMMABLE
+
+/obj/item/toy/baton
+	name = "toy stun baton"
+	desc = "A cheap, plastic replica of security's trusty stun baton. Now with realistic light and sound action."
+	icon = /obj/item/melee/baton/security::icon
+	icon_state = /obj/item/melee/baton/security::icon_state
+	worn_icon_state = /obj/item/melee/baton/security::worn_icon_state
+	inhand_icon_state = /obj/item/melee/baton/security::inhand_icon_state
+	lefthand_file = /obj/item/melee/baton/security::lefthand_file
+	righthand_file = /obj/item/melee/baton/security::righthand_file
+	slot_flags = ITEM_SLOT_BELT
+	attack_verb_continuous = /obj/item/melee/baton/security::attack_verb_continuous
+	attack_verb_simple = /obj/item/melee/baton/security::attack_verb_simple
+	w_class = /obj/item/melee/baton/security::w_class
+	resistance_flags = /obj/item/melee/baton/security::resistance_flags | FLAMMABLE
+	base_icon_state = /obj/item/melee/baton/security::icon_state
+	light_range = 1.5
+	light_system = OVERLAY_LIGHT
+	light_on = FALSE
+	light_color = LIGHT_COLOR_ORANGE
+	light_power = 0.5
+
+/obj/item/toy/baton/Initialize(mapload)
+	. = ..()
+	AddComponent( \
+		/datum/component/transforming, \
+		hitsound_on = 'sound/items/weapons/egloves.ogg', \
+		w_class_on = w_class, \
+		clumsy_check = FALSE, \
+		attack_verb_continuous_on = list("stuns"), \
+		attack_verb_simple_on = list("stun"), \
+		inhand_icon_change = FALSE, \
+	)
+	RegisterSignal(src, COMSIG_TRANSFORMING_ON_TRANSFORM, PROC_REF(on_transform))
+
+/obj/item/toy/baton/proc/on_transform(datum/source, mob/user, active)
+	SIGNAL_HANDLER
+	playsound(src, SFX_SPARKS, 75, TRUE, -1)
+	set_light_on(active)
+	if(active)
+		ADD_TRAIT(src, TRAIT_CUSTOM_TAP_SOUND, INNATE_TRAIT)
+		icon_state = "[base_icon_state]_active"
+		inhand_icon_state = "[base_icon_state]_active_orange"
+	else
+		REMOVE_TRAIT(src, TRAIT_CUSTOM_TAP_SOUND, INNATE_TRAIT)
+		icon_state = base_icon_state
+		inhand_icon_state = base_icon_state
+	return COMPONENT_NO_DEFAULT_MESSAGE

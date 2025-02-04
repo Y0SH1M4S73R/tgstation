@@ -4253,6 +4253,7 @@
 #include "code\modules\fishing\fish\types\rift.dm"
 #include "code\modules\fishing\fish\types\ruins.dm"
 #include "code\modules\fishing\fish\types\saltwater.dm"
+#include "code\modules\fishing\fish\types\slime.dm"
 #include "code\modules\fishing\fish\types\station.dm"
 #include "code\modules\fishing\fish\types\syndicate.dm"
 #include "code\modules\fishing\fish\types\tiziran.dm"

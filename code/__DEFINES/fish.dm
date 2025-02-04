@@ -8,6 +8,16 @@
 #define FISHING_INFLUENCE "Influence"
 ///Used in the dimensional rift fishing spot to define arm procurement
 #define FISHING_RANDOM_ARM "arm"
+///Used in the ectoplasmic anomaly fishing spot to define pulling an orbiting ghost into the material plane
+#define FISHING_ORBITER "orbiter"
+///Used in the flux anomaly fishing spot to define a tesla zap
+#define FISHING_ZAP "zap"
+///Used in the hallucination anomaly fishing spot to define making the fisher hallucinate
+#define FISHING_HALLUCINATION "hallucination"
+///Used in the bluespace anomaly fishing spot to define teleporting a random item or mob in range to the fishing spot
+#define FISHING_TELEPORT "teleport"
+///Used in the big bluespace anomaly fishing spot to define teleporting a random item or mob from almost anywhere in the world to the fishing spot
+#define FISHING_TELEPORT_ANYTHING "teleport_anything"
 
 ///Represents the chance of getting squashed by the vending machine from the vending machine fish source
 #define FISHING_VENDING_CHUCK "thinkfastchucklenuts"
@@ -211,6 +221,7 @@
 
 ///How likely one's to find a given fish from random fish cases.
 #define FISH_RARITY_BASIC 1000
+#define FISH_RARITY_UNCOMMON 700
 #define FISH_RARITY_RARE 400
 #define FISH_RARITY_VERY_RARE 200
 #define FISH_RARITY_GOOD_LUCK_FINDING_THIS 50

@@ -3,6 +3,7 @@
 	icon_state = "flux"
 	density = TRUE
 	anomaly_core = /obj/item/assembly/signaler/anomaly/flux
+	fish_source_type = /datum/fish_source/flux_anomaly
 	var/canshock = FALSE
 	var/shockdamage = 20
 	var/explosive = FLUX_EXPLOSIVE

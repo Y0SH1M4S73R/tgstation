@@ -117,3 +117,7 @@
 	melee_damage_upper = 10
 	death_message = "wails as it is torn back to the realm from which it came!"
 	random_identity = FALSE
+
+/// Variant of ghosts for player-controlled ghosts fished out of ectoplasmic anomalies.
+/mob/living/basic/ghost/fished_out
+	random_identity = FALSE

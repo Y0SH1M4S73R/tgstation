@@ -23,6 +23,8 @@
 	var/immortal = FALSE
 	///Chance per second that we will move
 	var/move_chance = ANOMALY_MOVECHANCE
+	///What fish source this anomaly will have, if any
+	var/fish_source_type
 
 /obj/effect/anomaly/Initialize(mapload, new_lifespan)
 	. = ..()
@@ -51,6 +53,8 @@
 		countdown.color = countdown_colour
 	if(immortal)
 		return
+	if(fish_source_type)
+		AddComponent(/datum/component/fishing_spot, fish_source_type)
 	countdown.start()
 
 /obj/effect/anomaly/vv_edit_var(vname, vval)
