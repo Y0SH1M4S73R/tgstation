@@ -1147,7 +1147,6 @@
 	overlay_state = "portal_mansus"
 	duds = list("it was nothing", "the hook is empty", "it got scrambled into goo")
 	catalog_description = null
-	fish_source_flags = FISH_SOURCE_FLAG_EXPLOSIVE_NONE
 
 /datum/fish_source/bioscrambler_anomaly/on_fishing_spot_init(datum/component/fishing_spot/spot)
 	if(!length(GLOB.bioscrambler_fish_table))
@@ -1169,6 +1168,10 @@
 
 	for(var/path in body_parts + organs)
 		GLOB.bioscrambler_fish_table[path] = is_path_in_list(path, GLOB.bioscrambler_fishing_unique_weights, TRUE) || FISH_RARITY_BASIC
+
+/datum/fish_source/bioscrambler_anomaly/spawn_reward_from_explosion(atom/location, severity)
+	new /obj/effect/gibspawner/generic(location)
+	. = ..()
 
 /datum/fish_source/ectoplasmic_anomaly
 	background = "background_camo"
@@ -1345,6 +1348,7 @@
 	catalog_description = null
 	radial_state = "hallucination"
 	overlay_state = "portal_mansus"
+	duds = list("it was nothing", "the hook is empty", "caught the colors!", "caught !", "caught null!", "caught 0!", "caught dud!")
 	fish_source_flags = FISH_SOURCE_FLAG_EXPLOSIVE_NONE
 	fish_table = list(
 		FISHING_DUD = 20,
