@@ -39,7 +39,7 @@
 	color = "#ff0000"
 	resistance_flags = parent_type::resistance_flags | FIRE_PROOF
 	required_temperature_max = FIRE_IMMUNITY_MAX_TEMP_PROTECT
-	random_case_rarity = FISH_RARITY_GOOD_LUCK_FINDING_THIS
+	random_case_rarity = FISH_RARITY_NOPE
 	fillet_type = /obj/item/slime_extract/red
 
 /obj/item/fish/slimefish/orange
@@ -48,12 +48,12 @@
 	color = "#ff8000"
 	resistance_flags = parent_type::resistance_flags | FIRE_PROOF
 	required_temperature_max = FIRE_IMMUNITY_MAX_TEMP_PROTECT
-	random_case_rarity = FISH_RARITY_GOOD_LUCK_FINDING_THIS
+	random_case_rarity = FISH_RARITY_NOPE
 	fillet_type = /obj/item/slime_extract/orange
 
 /obj/item/fish/slimefish/bluespace
 	name = "bluespace aquatic slime"
 	fish_id = "slimefish_bluespace"
 	color = "#0000ff"
-	random_case_rarity = FISH_RARITY_GOOD_LUCK_FINDING_THIS
+	random_case_rarity = FISH_RARITY_NOPE
 	fillet_type = /obj/item/slime_extract/bluespace
