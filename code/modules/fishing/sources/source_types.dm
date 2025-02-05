@@ -1100,10 +1100,10 @@
 	fire_curse_hand(user, get_turf(challenge.location))
 
 /datum/fish_source/pyro_anomaly
-	background = "background_lava"
+	background = "background_anom_pyroclastic"
 	catalog_description = null
 	radial_state = "pyroclastic"
-	overlay_state = "portal_lava"
+	overlay_state = "portal_anom_pyroclastic"
 	duds = list("it was nothing", "the hook is empty", "just ashes")
 	fish_table = list(
 		FISHING_DUD = 5,
@@ -1113,10 +1113,10 @@
 	fish_source_flags = FISH_SOURCE_FLAG_EXPLOSIVE_NONE
 
 /datum/fish_source/flux_anomaly
-	background = "background_antique"
+	background = "background_anom_flux"
 	catalog_description = null
 	radial_state = "flux"
-	overlay_state = "portal_mansus"
+	overlay_state = "portal_anom_flux"
 	duds = list("it was nothing", "the hook is empty", "does an electric charge count?")
 	fish_table = list(
 		FISHING_DUD = 5,
@@ -1141,10 +1141,10 @@
 	. = ..()
 
 /datum/fish_source/bioscrambler_anomaly
-	background = "background_chasm"
+	background = "background_anom_bioscrambler"
 	catalog_description = null
 	radial_state = "bioscrambler"
-	overlay_state = "portal_mansus"
+	overlay_state = "portal_anom_bioscrambler"
 	duds = list("it was nothing", "the hook is empty", "it got scrambled into goo")
 	catalog_description = null
 
@@ -1174,10 +1174,10 @@
 	. = ..()
 
 /datum/fish_source/ectoplasmic_anomaly
-	background = "background_camo"
+	background = "background_anom_ectoplasm"
 	catalog_description = null
 	radial_state = "ectoplasm"
-	overlay_state = "portal_mansus"
+	overlay_state = "portal_anom_ectoplasm"
 	duds = list("it was nothing", "the hook is empty", "it was nothing... or was it?", "the hook is empty... or is it?", "it was a ghoooooost~")
 	fish_table = list(
 		FISHING_DUD = 10,
@@ -1249,10 +1249,10 @@
 	. = ..()
 
 /datum/fish_source/dimensional_anomaly
-	background = "background_camo"
+	background = "background_anom_dimensional"
 	catalog_description = null
 	radial_state = "dimensional"
-	overlay_state = "portal_randomizer"
+	overlay_state = "portal_anom_dimensional"
 	fish_source_flags = FISH_SOURCE_FLAG_EXPLOSIVE_NONE
 	fish_table = /datum/dimension_theme::fish_table
 
@@ -1269,9 +1269,10 @@
 		return anomaly.theme.fish_table
 
 /datum/fish_source/bluespace_anomaly
+	background = "background_anom_bluespace"
 	catalog_description = null
 	radial_state = "bluespace"
-	overlay_state = "portal_hyperspace"
+	overlay_state = "portal_anom_bluespace"
 	duds = list("it was nothing", "the hook is empty", "it got teleported")
 	fish_table = list(
 		FISHING_DUD = 5,
@@ -1345,10 +1346,10 @@
 	)
 
 /datum/fish_source/hallucination_anomaly
-	background = "background_mansus"
+	background = "background_anom_hallucination"
 	catalog_description = null
 	radial_state = "hallucination"
-	overlay_state = "portal_mansus"
+	overlay_state = "portal_hallucination"
 	duds = list("it was nothing", "the hook is empty", "caught the colors!", "caught !", "caught null!", "caught 0!", "caught dud!")
 	fish_source_flags = FISH_SOURCE_FLAG_EXPLOSIVE_NONE
 	fish_table = list(
