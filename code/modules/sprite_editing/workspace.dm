@@ -60,8 +60,8 @@
 			var/list/points = transaction["points"]
 			var/list/affected_frame = layers[layer]["data"][dir]
 			for(var/point in points)
-				var/x = point[1]
-				var/y = point[2]
+				var/x = point[1]+1
+				var/y = point[2]+1
 				points += affected_frame[y][x]
 		if("flatten_layer")
 			var/layer = transaction["layer"]
